@@ -1,8 +1,11 @@
 package com.aaa.lwq.base;
 
+import com.aaa.lwq.utils.Map2BeanUtils;
+import com.aaa.lwq.utils.SpringContextUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.Sqls;
@@ -10,6 +13,7 @@ import tk.mybatis.mapper.util.Sqls;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Program: qy-108
@@ -20,7 +24,7 @@ import java.util.List;
  **/
 public abstract class BaseService<T> {
 
-    // 本地缓存池
+
     private Class<T> cache = null;
 
     @Autowired
@@ -241,4 +245,29 @@ public abstract class BaseService<T> {
         return cache;
     }
 
+    /**
+     * @author lwq 
+     * @description
+     *     根据反射获取实例对象
+     * @param: [map]
+     * @date 2020/5/12
+     * @return T
+     * @throws 
+     **/
+    public T newInstance(Map map) {
+        return (T) Map2BeanUtils.map2Bean(map, getTypeArguement());
+    }
+
+   /**
+    * @author lwq 
+    * @description
+    *    获取spring容器
+    * @param: []
+    * @date 2020/5/12
+    * @return org.springframework.context.ApplicationContext
+    * @throws 
+    **/
+    public ApplicationContext getApplicationContext() {
+        return SpringContextUtils.getApplicationContext();
+    }
 }
