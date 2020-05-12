@@ -14,7 +14,6 @@
         <module>qy-108-mapper</module>
         <module>qy-108-service</module>
         <module>qy-108-api</module>
-        <module>qy-108-service</module>
     </modules>
     <artifactId>qy-108-management</artifactId>
 
