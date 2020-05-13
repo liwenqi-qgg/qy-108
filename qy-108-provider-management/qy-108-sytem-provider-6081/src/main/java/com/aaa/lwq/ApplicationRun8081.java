@@ -2,6 +2,8 @@ package com.aaa.lwq;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import tk.mybatis.spring.annotation.MapperScan;
@@ -12,7 +14,11 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @create: 2020-05-12 19:26
  * @description: 启动类
  **/
-@SpringBootApplication
+
+@SpringBootApplication( exclude = {
+        RedisAutoConfiguration.class,
+        RedisRepositoriesAutoConfiguration.class
+})
 @MapperScan("com.aaa.lwq.mapper")
 @EnableDiscoveryClient
 @EnableCircuitBreaker
