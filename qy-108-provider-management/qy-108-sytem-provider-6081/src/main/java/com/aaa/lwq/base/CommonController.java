@@ -1,5 +1,6 @@
 package com.aaa.lwq.base;
 
+import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -7,6 +8,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,12 +64,12 @@ public abstract class CommonController<T> extends BaseController {
             if(insertResult > 0) {
                 // 说明保存成功
                 afterAdd(map);
-                return loginSuccess();
+                return addSuccess();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return loginFailed();
+        return addFailed();
     }
     /**
      * @author lwq 
@@ -84,16 +86,116 @@ public abstract class CommonController<T> extends BaseController {
         try {
             Integer deleteResult = getBaseService().delete(instance);
             if (deleteResult > 0){
-                return loginSuccess();
+                //删除数据成功
+                return deleteSuccess();
             }
             
         }catch (Exception e){
             e.printStackTrace();
         }
-        return loginFailed();        
+        return deleteFailed();
     }
-    // TODO delete, batchDelete, update, getOne, getList, getListByPage(不带条件的分页查询)
+    
+    /**
+     * @author lwq 
+     * @description
+     *    批量删除
+     * @param: [map]
+     * @date 2020/5/13
+     * @return com.aaa.lwq.base.ResultData
+     * @throws 
+     **/
+    public ResultData batchDelete(@RequestBody Map map){
+        return null;
+    }
 
+    /**
+     * @author lwq
+     * @description
+     *    跟新一条数据或者更改某个字段的值
+     * @param: [map]
+     * @date 2020/5/13
+     * @return com.aaa.lwq.base.ResultData
+     * @throws
+     **/
+    public ResultData update(@RequestBody Map map){
+        T instance = getBaseService().newInstance(map);
+        try {
+            Integer updateResult = getBaseService().update(instance);
+            if(updateResult>0){
+                return updateSuccess();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return updateFailed();
+    }
+    /**
+     * @author lwq
+     * @description
+     *    查询一条数据
+     * @param: [map]
+     * @date 2020/5/13
+     * @return com.aaa.lwq.base.ResultData
+     * @throws
+     **/
+    public ResultData getOne(@RequestBody Map map){
+        T instance = getBaseService().newInstance(map);
+        try {
+            T queryOne = getBaseService().queryOne(instance);
+            if(null!=null && "".equals(queryOne)){
+                return getSuccess(queryOne);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getFailed();
+    }
+
+    /**
+     * @author lwq
+     * @description
+     *    按照条件查询数据
+     * @param: [map]
+     * @date 2020/5/13
+     * @return com.aaa.lwq.base.ResultData
+     * @throws
+     **/
+    public ResultData getList(@RequestBody Map map){
+        T instance = getBaseService().newInstance(map);
+        try {
+            List<T> ts = getBaseService().queryList(instance);
+            if(ts.size()>0){
+                return getSuccess(ts);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getFailed();
+    }
+
+    /**
+     * @author lwq
+     * @description
+     *    不带条件的分页查询
+     * @param: [map, pageNo, pageSize]
+     * @date 2020/5/13
+     * @return com.aaa.lwq.base.ResultData
+     * @throws
+     **/
+    public ResultData getListByPage(@RequestBody Map map, Integer pageNo, Integer pageSize){
+        T instance = getBaseService().newInstance(map);
+        try {
+            PageInfo<T> tPageInfo = getBaseService().queryListByPage(instance, pageNo, pageSize);
+            if (null!=tPageInfo && "".equals(tPageInfo)){
+                return getSuccess(tPageInfo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return getFailed();
+    }
+  
     /**
      * @author lwq 
      * @description
